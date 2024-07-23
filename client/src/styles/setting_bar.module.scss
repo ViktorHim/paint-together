@@ -1,6 +1,6 @@
 @import "./variables.scss";
 
-.toolbar {
+.setting_bar {
   height: $toolbar-h;
   background-color: #fff;
   display: flex;
@@ -9,7 +9,6 @@
   position: absolute;
   right: 0;
   left: 0;
-  top: 0;
+  top: $toolbar-h;
   box-shadow: 0 4px 5px gray;
-  z-index: 5;
 }
