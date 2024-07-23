@@ -1,13 +1,16 @@
 class Tool {
   protected canvas: HTMLCanvasElement;
-  protected context: CanvasRenderingContext2D | null;
+  protected context: CanvasRenderingContext2D;
   protected isMouseDown: boolean;
 
-  protected draw?(x: number, y: number): void;
+  // protected draw?(x: number, y: number): void;
+  protected mouseUpHandler?(event: MouseEvent): void;
+  protected mouseDownHandler?(event: MouseEvent): void;
+  protected mouseMoveHandler?(event: MouseEvent): void;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
-    this.context = canvas.getContext("2d");
+    this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.isMouseDown = false;
     this.removeEvents();
   }
