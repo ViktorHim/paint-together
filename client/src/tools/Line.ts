@@ -1,6 +1,6 @@
 import Tool from "./Tool";
 
-class Rect extends Tool {
+class Line extends Tool {
   startX: number = 0;
   startY: number = 0;
   endX: number = 0;
@@ -26,6 +26,7 @@ class Rect extends Tool {
   protected mouseDownHandler(event: MouseEvent) {
     this.isMouseDown = true;
     this.context?.beginPath();
+    // this.context.moveTo(this.getClickPosX(event), this.getClickPosY(event));
     this.startX = this.getClickPosX(event);
     this.startY = this.getClickPosY(event);
     this.saved = this.canvas.toDataURL();
@@ -35,26 +36,22 @@ class Rect extends Tool {
     if (this.isMouseDown) {
       this.endX = this.getClickPosX(event);
       this.endY = this.getClickPosY(event);
-
-      const width = this.endX - this.startX;
-      const height = this.endY - this.startY;
-
-      this.draw(this.startX, this.startY, width, height);
+      this.draw(this.endX, this.endY);
     }
   }
 
-  private draw(x: number, y: number, w: number, h: number) {
+  private draw(x: number, y: number) {
     const img = new Image();
     img.src = this.saved;
     img.onload = () => {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.context.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
       this.context.beginPath();
-      this.context.rect(x, y, w, h);
-      // this.context.fill();
+      this.context.moveTo(this.startX, this.startY);
+      this.context.lineTo(x, y);
       this.context.stroke();
     };
   }
 }
 
-export default Rect;
+export default Line;
