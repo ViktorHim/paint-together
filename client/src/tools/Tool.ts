@@ -3,7 +3,6 @@ class Tool {
   protected context: CanvasRenderingContext2D;
   protected isMouseDown: boolean;
 
-  // protected draw?(x: number, y: number): void;
   protected mouseUpHandler?(event: MouseEvent): void;
   protected mouseDownHandler?(event: MouseEvent): void;
   protected mouseMoveHandler?(event: MouseEvent): void;
@@ -19,6 +18,20 @@ class Tool {
     this.canvas.onmouseup = null;
     this.canvas.onmousedown = null;
     this.canvas.onmousemove = null;
+    document.body.onkeydown = null;
+    document.body.onkeyup = null;
+  }
+
+  public set fillColor(color: string) {
+    this.context.fillStyle = color;
+  }
+
+  public set strokeColor(color: string) {
+    this.context.strokeStyle = color;
+  }
+
+  public set lineWidth(width: number) {
+    this.context.lineWidth = width;
   }
 
   protected getClickPosX(event: MouseEvent): number {

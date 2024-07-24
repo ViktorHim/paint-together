@@ -5,7 +5,7 @@ class Line extends Tool {
   startY: number = 0;
   endX: number = 0;
   endY: number = 0;
-  saved: any;
+  saved: string = "";
 
   constructor(canvas: HTMLCanvasElement) {
     super(canvas);
@@ -26,7 +26,6 @@ class Line extends Tool {
   protected mouseDownHandler(event: MouseEvent) {
     this.isMouseDown = true;
     this.context?.beginPath();
-    // this.context.moveTo(this.getClickPosX(event), this.getClickPosY(event));
     this.startX = this.getClickPosX(event);
     this.startY = this.getClickPosY(event);
     this.saved = this.canvas.toDataURL();

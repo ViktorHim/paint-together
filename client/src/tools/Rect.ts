@@ -5,7 +5,9 @@ class Rect extends Tool {
   startY: number = 0;
   endX: number = 0;
   endY: number = 0;
-  saved: any;
+  saved: string = "";
+
+  isShiftPressed: boolean = false;
 
   constructor(canvas: HTMLCanvasElement) {
     super(canvas);
@@ -16,6 +18,24 @@ class Rect extends Tool {
     this.canvas.onmouseup = this.mouseUpHandler.bind(this);
     this.canvas.onmousedown = this.mouseDownHandler.bind(this);
     this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
+    document.body.onkeydown = this.keydownHandler.bind(this);
+    document.body.onkeyup = this.keyupHandler.bind(this);
+  }
+
+  protected keyupHandler(event: KeyboardEvent) {
+    const key = event.key;
+    console.log(key);
+    if (key === "Shift") {
+      this.isShiftPressed = false;
+    }
+  }
+
+  protected keydownHandler(event: KeyboardEvent) {
+    const key = event.key;
+
+    if (key === "Shift") {
+      this.isShiftPressed = true;
+    }
   }
 
   protected mouseUpHandler(event: MouseEvent) {
@@ -39,7 +59,18 @@ class Rect extends Tool {
       const width = this.endX - this.startX;
       const height = this.endY - this.startY;
 
-      this.draw(this.startX, this.startY, width, height);
+      if (this.isShiftPressed) {
+        const newWidth =
+          (width / Math.abs(width)) *
+          Math.min(Math.abs(width), Math.abs(height));
+        const newHeight =
+          (height / Math.abs(height)) *
+          Math.min(Math.abs(width), Math.abs(height));
+
+        this.draw(this.startX, this.startY, newWidth, newHeight);
+      } else {
+        this.draw(this.startX, this.startY, width, height);
+      }
     }
   }
 

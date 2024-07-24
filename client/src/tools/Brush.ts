@@ -29,7 +29,7 @@ class Brush extends Tool {
     }
   }
 
-  public draw(x: number, y: number) {
+  protected draw(x: number, y: number) {
     this.context?.lineTo(x, y);
     this.context?.stroke();
   }

@@ -4,13 +4,14 @@ import Brush from "../tools/Brush";
 import { ToolButton, ToolType } from "./ToolButton";
 import Rect from "../tools/Rect";
 import Line from "../tools/Line";
+import Eraser from "../tools/Eraser";
 
 const paintTools = [
   { type: ToolType.BRUSH, toolClass: Brush },
   { type: ToolType.LINE, toolClass: Line },
   { type: ToolType.RECT, toolClass: Rect },
   { type: ToolType.CIRCLE, toolClass: Brush },
-  { type: ToolType.ERASER, toolClass: Brush },
+  { type: ToolType.ERASER, toolClass: Eraser },
 ];
 
 export const ToolBar = () => {
