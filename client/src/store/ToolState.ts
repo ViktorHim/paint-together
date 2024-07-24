@@ -29,6 +29,10 @@ class ToolState {
       this.tool!.lineWidth = width;
     }
   }
+
+  clearCanvas() {
+    this.tool?.clear();
+  }
 }
 
 export default new ToolState();

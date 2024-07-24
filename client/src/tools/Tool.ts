@@ -34,6 +34,10 @@ class Tool {
     this.context.lineWidth = width;
   }
 
+  public clear() {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
   protected getClickPosX(event: MouseEvent): number {
     return event.pageX - (event.target as HTMLElement).offsetLeft;
   }

@@ -20,6 +20,8 @@ export const SettingBar = () => {
         type="color"
         onChange={(e) => ToolState.setStrokeColor(e.target.value)}
       />
+
+      <button onClick={() => ToolState.clearCanvas()}>Очистить холст</button>
     </div>
   );
 };
