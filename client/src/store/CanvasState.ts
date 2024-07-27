@@ -4,8 +4,17 @@ class CanvasState {
   canvas?: HTMLCanvasElement;
   undoList: string[] = [];
   redoList: string[] = [];
+  cursorPosition: { x: number; y: number } | null = null;
   constructor() {
     makeAutoObservable(this);
+  }
+
+  setCursorPosition(x: number, y: number) {
+    this.cursorPosition = { x, y };
+  }
+
+  clearCursorPosition() {
+    this.cursorPosition = null;
   }
 
   setCanvas(canvas: HTMLCanvasElement) {

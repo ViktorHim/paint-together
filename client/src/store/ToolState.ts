@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import Tool from "../tools/Tool";
+import Tool, { drawMode } from "../tools/Tool";
 
 class ToolState {
   tool?: Tool;
@@ -12,6 +12,12 @@ class ToolState {
     this.tool = tool;
   }
 
+  setDrawMode(mode: drawMode) {
+    if (this.tool) {
+      this.tool.drawMode = mode;
+    }
+  }
+
   setFillColor(color: string) {
     if (this.tool) {
       this.tool.fillColor = color;
@@ -22,6 +28,7 @@ class ToolState {
     if (this.tool) {
       this.tool.strokeColor = color;
     }
+    console.log(color);
   }
 
   setLineWidth(width: number) {

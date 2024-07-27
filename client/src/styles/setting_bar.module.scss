@@ -11,4 +11,17 @@
   left: 0;
   top: $toolbar-h;
   box-shadow: 0 4px 5px gray;
+  display: flex;
+  justify-content: space-between;
+
+  &_left {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.label {
+  margin-right: 15px;
 }

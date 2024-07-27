@@ -1,7 +1,10 @@
+export type drawMode = "border" | "fill";
+
 class Tool {
   protected canvas: HTMLCanvasElement;
   protected context: CanvasRenderingContext2D;
   protected isMouseDown: boolean;
+  protected mode: drawMode = "border";
 
   protected mouseUpHandler?(event: MouseEvent): void;
   protected mouseDownHandler?(event: MouseEvent): void;
@@ -20,6 +23,10 @@ class Tool {
     this.canvas.onmousemove = null;
     document.body.onkeydown = null;
     document.body.onkeyup = null;
+  }
+
+  public set drawMode(mode: drawMode) {
+    this.mode = mode;
   }
 
   public set fillColor(color: string) {

@@ -7,13 +7,16 @@ import Line from "../tools/Line";
 import Eraser from "../tools/Eraser";
 import CanvasState from "../store/CanvasState";
 import { observer } from "mobx-react-lite";
+import Circle from "../tools/Circle";
+import Bucket from "../tools/Bucket";
 
 const paintTools = [
   { type: ToolType.BRUSH, toolClass: Brush },
   { type: ToolType.LINE, toolClass: Line },
   { type: ToolType.RECT, toolClass: Rect },
-  { type: ToolType.CIRCLE, toolClass: Brush },
+  { type: ToolType.CIRCLE, toolClass: Circle },
   { type: ToolType.ERASER, toolClass: Eraser },
+  { type: ToolType.BUCKET, toolClass: Bucket },
 ];
 
 export const ToolBar = observer(() => {

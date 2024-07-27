@@ -9,6 +9,7 @@ export enum ToolType {
   LINE = "line",
   ERASER = "eraser",
   RECT = "rect",
+  BUCKET = "bucket",
   UNDO = "undo",
   REDO = "redo",
   SAVE = "save",

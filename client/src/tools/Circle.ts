@@ -1,6 +1,6 @@
 import Tool from "./Tool";
 
-class Rect extends Tool {
+class Circle extends Tool {
   startX: number = 0;
   startY: number = 0;
   endX: number = 0;
@@ -24,7 +24,6 @@ class Rect extends Tool {
 
   protected keyupHandler(event: KeyboardEvent) {
     const key = event.key;
-    console.log(key);
     if (key === "Shift") {
       this.isShiftPressed = false;
     }
@@ -56,32 +55,32 @@ class Rect extends Tool {
       this.endX = this.getClickPosX(event);
       this.endY = this.getClickPosY(event);
 
-      const width = this.endX - this.startX;
-      const height = this.endY - this.startY;
+      const radiusX = Math.abs(this.endX - this.startX) / 2;
+      const radiusY = Math.abs(this.endY - this.startY) / 2;
+      const centerX = (this.endX + this.startX) / 2;
+      const centerY = (this.endY + this.startY) / 2;
 
       if (this.isShiftPressed) {
-        const newWidth =
-          (width / Math.abs(width)) *
-          Math.min(Math.abs(width), Math.abs(height));
-        const newHeight =
-          (height / Math.abs(height)) *
-          Math.min(Math.abs(width), Math.abs(height));
-
-        this.draw(this.startX, this.startY, newWidth, newHeight);
+        const newRadius =
+          Math.sqrt(
+            Math.pow(this.endX - this.startX, 2) +
+              Math.pow(this.endY - this.startY, 2)
+          ) / 2;
+        this.draw(centerX, centerY, newRadius, newRadius);
       } else {
-        this.draw(this.startX, this.startY, width, height);
+        this.draw(centerX, centerY, radiusX, radiusY);
       }
     }
   }
 
-  private draw(x: number, y: number, w: number, h: number) {
+  private draw(x: number, y: number, radiusX: number, radiusY: number) {
     const img = new Image();
     img.src = this.saved;
     img.onload = () => {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.context.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
       this.context.beginPath();
-      this.context.rect(x, y, w, h);
+      this.context.ellipse(x, y, radiusX, radiusY, 0, 0, 2 * Math.PI);
       if (this.mode === "fill") {
         this.context.fill();
       }
@@ -90,4 +89,4 @@ class Rect extends Tool {
   }
 }
 
-export default Rect;
+export default Circle;
