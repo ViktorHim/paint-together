@@ -15,6 +15,10 @@
   z-index: 5;
 
   &_btn {
+    &:disabled {
+      opacity: 0.5;
+    }
+
     height: 25px;
     width: 25px;
     outline: none;
