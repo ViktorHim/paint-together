@@ -1,16 +1,20 @@
+import PaintSocket from "../socket/Socket";
+
 export type drawMode = "border" | "fill";
 
 class Tool {
   protected canvas: HTMLCanvasElement;
   protected context: CanvasRenderingContext2D;
   protected isMouseDown: boolean;
+  protected socket: PaintSocket;
   protected mode: drawMode = "border";
 
   protected mouseUpHandler?(event: MouseEvent): void;
   protected mouseDownHandler?(event: MouseEvent): void;
   protected mouseMoveHandler?(event: MouseEvent): void;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
+    this.socket = socket;
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.isMouseDown = false;

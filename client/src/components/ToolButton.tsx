@@ -1,4 +1,6 @@
+import PaintSocket from "../socket/Socket";
 import CanvasState from "../store/CanvasState";
+import SocketState from "../store/SocketState";
 import ToolState from "../store/ToolState";
 import "../styles/toolbar.scss";
 import Tool from "../tools/Tool";
@@ -17,7 +19,7 @@ export enum ToolType {
 
 export interface ToolButtonProps {
   type: ToolType;
-  toolClass: new (canvas: HTMLCanvasElement) => Tool;
+  toolClass: new (canvas: HTMLCanvasElement, socket: PaintSocket) => Tool;
   isSelected: boolean;
   onClick: (id: number) => void;
   id: number;
@@ -31,7 +33,12 @@ export const ToolButton = ({
   id,
 }: ToolButtonProps) => {
   const onClickHandler = () => {
-    ToolState.setTool(new toolClass(CanvasState.canvas as HTMLCanvasElement));
+    ToolState.setTool(
+      new toolClass(
+        CanvasState.canvas as HTMLCanvasElement,
+        SocketState.socket!
+      )
+    );
     onClick(id);
   };
 

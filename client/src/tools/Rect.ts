@@ -1,16 +1,17 @@
-import Tool from "./Tool";
+import PaintSocket from "../socket/Socket";
+import Tool, { drawMode } from "./Tool";
 
 class Rect extends Tool {
   startX: number = 0;
   startY: number = 0;
-  endX: number = 0;
-  endY: number = 0;
+  height: number = 0;
+  width: number = 0;
   saved: string = "";
 
   isShiftPressed: boolean = false;
 
-  constructor(canvas: HTMLCanvasElement) {
-    super(canvas);
+  constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
+    super(canvas, socket);
     this.listenEvents();
   }
 
@@ -40,7 +41,15 @@ class Rect extends Tool {
 
   protected mouseUpHandler(event: MouseEvent) {
     this.isMouseDown = false;
-    console.log(event);
+
+    this.socket.sendDrawData({
+      x: this.startX,
+      y: this.startY,
+      width: this.width,
+      height: this.height,
+      mode: this.mode,
+      figure: "rect",
+    });
   }
 
   protected mouseDownHandler(event: MouseEvent) {
@@ -53,28 +62,44 @@ class Rect extends Tool {
 
   protected mouseMoveHandler(event: MouseEvent) {
     if (this.isMouseDown) {
-      this.endX = this.getClickPosX(event);
-      this.endY = this.getClickPosY(event);
+      const endX = this.getClickPosX(event);
+      const endY = this.getClickPosY(event);
 
-      const width = this.endX - this.startX;
-      const height = this.endY - this.startY;
+      this.width = endX - this.startX;
+      this.height = endY - this.startY;
 
       if (this.isShiftPressed) {
-        const newWidth =
-          (width / Math.abs(width)) *
-          Math.min(Math.abs(width), Math.abs(height));
-        const newHeight =
-          (height / Math.abs(height)) *
-          Math.min(Math.abs(width), Math.abs(height));
+        this.width =
+          (this.width / Math.abs(this.width)) *
+          Math.min(Math.abs(this.width), Math.abs(this.height));
+        this.height =
+          (this.height / Math.abs(this.height)) *
+          Math.min(Math.abs(this.width), Math.abs(this.height));
 
-        this.draw(this.startX, this.startY, newWidth, newHeight);
+        this.drawWithPreview(this.startX, this.startY, this.height, this.width);
       } else {
-        this.draw(this.startX, this.startY, width, height);
+        this.drawWithPreview(this.startX, this.startY, this.width, this.height);
       }
     }
   }
 
-  private draw(x: number, y: number, w: number, h: number) {
+  public static draw(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    mode: drawMode,
+    context: CanvasRenderingContext2D
+  ) {
+    context.beginPath();
+    context.rect(x, y, w, h);
+    if (mode === "fill") {
+      context.fill();
+    }
+    context.stroke();
+  }
+
+  private drawWithPreview(x: number, y: number, w: number, h: number) {
     const img = new Image();
     img.src = this.saved;
     img.onload = () => {

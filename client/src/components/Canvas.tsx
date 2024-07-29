@@ -1,15 +1,12 @@
 import { observer } from "mobx-react-lite";
 import cls from "../styles/canvas.module.scss";
-import { MouseEventHandler, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import CanvasState from "../store/CanvasState";
-import ToolState from "../store/ToolState";
-import Brush from "../tools/Brush";
 
 export const Canvas = observer(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     CanvasState.setCanvas(canvasRef.current as HTMLCanvasElement);
-    ToolState.setTool(new Brush(canvasRef.current as HTMLCanvasElement));
   }, []);
 
   const onMouseDownHandler = () => {
@@ -39,4 +36,3 @@ export const Canvas = observer(() => {
     </div>
   );
 });
-//H5dk82i22j

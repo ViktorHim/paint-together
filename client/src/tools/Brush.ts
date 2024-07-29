@@ -1,8 +1,9 @@
+import PaintSocket from "../socket/Socket";
 import Tool from "./Tool";
 
 class Brush extends Tool {
-  constructor(canvas: HTMLCanvasElement) {
-    super(canvas);
+  constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
+    super(canvas, socket);
     this.listenEvents();
   }
 
@@ -14,7 +15,7 @@ class Brush extends Tool {
 
   mouseUpHandler(event: MouseEvent) {
     this.isMouseDown = false;
-    console.log(event);
+    this.socket.sendFinish();
   }
 
   mouseDownHandler(event: MouseEvent) {
@@ -25,13 +26,18 @@ class Brush extends Tool {
 
   mouseMoveHandler(event: MouseEvent) {
     if (this.isMouseDown) {
-      this.draw(this.getClickPosX(event), this.getClickPosY(event));
+      this.drawBroadcast(this.getClickPosX(event), this.getClickPosY(event));
     }
   }
 
-  protected draw(x: number, y: number) {
-    this.context?.lineTo(x, y);
-    this.context?.stroke();
+  drawBroadcast(x: number, y: number) {
+    Brush.draw(x, y, this.context);
+    this.socket.sendDrawData({ x, y, figure: "brush" });
+  }
+
+  public static draw(x: number, y: number, context: CanvasRenderingContext2D) {
+    context.lineTo(x, y);
+    context.stroke();
   }
 }
 
