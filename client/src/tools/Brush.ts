@@ -1,4 +1,5 @@
 import PaintSocket from "../socket/Socket";
+import { Figures } from "../types/DrawData";
 import Tool from "./Tool";
 
 class Brush extends Tool {
@@ -32,7 +33,12 @@ class Brush extends Tool {
 
   drawBroadcast(x: number, y: number) {
     Brush.draw(x, y, this.context);
-    this.socket.sendDrawData({ x, y, figure: "brush" });
+    this.socket.sendDrawData({
+      x,
+      y,
+      strokeColor: this.context.strokeStyle,
+      figure: Figures.Brush,
+    });
   }
 
   public static draw(x: number, y: number, context: CanvasRenderingContext2D) {

@@ -1,4 +1,5 @@
 import PaintSocket from "../socket/Socket";
+import { Figures } from "../types/DrawData";
 import Tool, { drawMode } from "./Tool";
 
 class Rect extends Tool {
@@ -48,8 +49,10 @@ class Rect extends Tool {
       width: this.width,
       height: this.height,
       mode: this.mode,
-      figure: "rect",
+      figure: Figures.Rect,
     });
+
+    this.socket.sendFinish();
   }
 
   protected mouseDownHandler(event: MouseEvent) {

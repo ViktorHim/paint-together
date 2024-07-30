@@ -1,6 +1,8 @@
 import Brush from "../tools/Brush";
+import Circle from "../tools/Circle";
+import Line from "../tools/Line";
 import Rect from "../tools/Rect";
-import { DrawData } from "../types/DrawData";
+import { DrawData, Figures } from "../types/DrawData";
 
 type MessageMethod = "connection" | "draw" | "finish";
 
@@ -82,19 +84,30 @@ class PaintSocket {
 
   private drawHandler(message: Message) {
     const context = this.canvas.getContext("2d")!;
-    const figureType = typeof message.drawData;
 
     if (message.drawData) {
       switch (message.drawData.figure) {
-        case "brush":
+        case Figures.Brush:
           {
             const { x, y } = message.drawData;
             Brush.draw(x, y, context);
           }
           break;
-        case "rect": {
-          const { x, y, height, width, mode } = message.drawData;
-          Rect.draw(x, y, width, height, mode, context);
+        case Figures.Rect:
+          {
+            const { x, y, height, width, mode } = message.drawData;
+            Rect.draw(x, y, width, height, mode, context);
+          }
+          break;
+        case Figures.Line:
+          {
+            const { x1, y1, x2, y2 } = message.drawData;
+
+            Line.draw(x1, y1, x2, y2, context);
+          }
+          break;
+        case Figures.Circle: {
+          Circle.draw(message.drawData!, context);
         }
       }
     }

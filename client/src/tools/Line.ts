@@ -1,3 +1,5 @@
+import PaintSocket from "../socket/Socket";
+import { Figures } from "../types/DrawData";
 import Tool from "./Tool";
 
 class Line extends Tool {
@@ -7,8 +9,8 @@ class Line extends Tool {
   endY: number = 0;
   saved: string = "";
 
-  constructor(canvas: HTMLCanvasElement) {
-    super(canvas);
+  constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
+    super(canvas, socket);
     this.listenEvents();
   }
 
@@ -20,7 +22,14 @@ class Line extends Tool {
 
   protected mouseUpHandler(event: MouseEvent) {
     this.isMouseDown = false;
-    console.log(event);
+
+    this.socket.sendDrawData({
+      x1: this.startX,
+      y1: this.startY,
+      x2: this.endX,
+      y2: this.endY,
+      figure: Figures.Line,
+    });
   }
 
   protected mouseDownHandler(event: MouseEvent) {
@@ -35,11 +44,25 @@ class Line extends Tool {
     if (this.isMouseDown) {
       this.endX = this.getClickPosX(event);
       this.endY = this.getClickPosY(event);
-      this.draw(this.endX, this.endY);
+      this.drawWithPreview();
     }
   }
 
-  private draw(x: number, y: number) {
+  public static draw(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    context: CanvasRenderingContext2D
+  ) {
+    context.beginPath();
+    context.moveTo(x1, y1);
+    context.lineTo(x2, y2);
+    context.stroke();
+    context.beginPath();
+  }
+
+  private drawWithPreview() {
     const img = new Image();
     img.src = this.saved;
     img.onload = () => {
@@ -47,7 +70,7 @@ class Line extends Tool {
       this.context.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
       this.context.beginPath();
       this.context.moveTo(this.startX, this.startY);
-      this.context.lineTo(x, y);
+      this.context.lineTo(this.endX, this.endY);
       this.context.stroke();
     };
   }

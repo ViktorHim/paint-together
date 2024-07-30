@@ -1,16 +1,22 @@
-import Tool from "./Tool";
+import PaintSocket from "../socket/Socket";
+import { CircleDrawData, Figures } from "../types/DrawData";
+import Tool, { drawMode } from "./Tool";
 
 class Circle extends Tool {
-  startX: number = 0;
-  startY: number = 0;
-  endX: number = 0;
-  endY: number = 0;
+  startX = 0;
+  startY = 0;
+  endX = 0;
+  endY = 0;
+  radiusX = 0;
+  radiusY = 0;
+  centerX = 0;
+  centerY = 0;
   saved: string = "";
 
   isShiftPressed: boolean = false;
 
-  constructor(canvas: HTMLCanvasElement) {
-    super(canvas);
+  constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
+    super(canvas, socket);
     this.listenEvents();
   }
 
@@ -39,7 +45,17 @@ class Circle extends Tool {
 
   protected mouseUpHandler(event: MouseEvent) {
     this.isMouseDown = false;
-    console.log(event);
+
+    this.socket.sendDrawData({
+      centerX: this.centerX,
+      centerY: this.centerY,
+      radiusX: this.radiusX,
+      radiusY: this.radiusY,
+      mode: this.mode,
+      figure: Figures.Circle,
+      strokeColor: this.context.strokeStyle,
+      fillColor: this.context.fillStyle,
+    });
   }
 
   protected mouseDownHandler(event: MouseEvent) {
@@ -55,32 +71,74 @@ class Circle extends Tool {
       this.endX = this.getClickPosX(event);
       this.endY = this.getClickPosY(event);
 
-      const radiusX = Math.abs(this.endX - this.startX) / 2;
-      const radiusY = Math.abs(this.endY - this.startY) / 2;
-      const centerX = (this.endX + this.startX) / 2;
-      const centerY = (this.endY + this.startY) / 2;
+      this.radiusX = Math.abs(this.endX - this.startX) / 2;
+      this.radiusY = Math.abs(this.endY - this.startY) / 2;
+      this.centerX = (this.endX + this.startX) / 2;
+      this.centerY = (this.endY + this.startY) / 2;
 
       if (this.isShiftPressed) {
-        const newRadius =
+        this.radiusX =
           Math.sqrt(
             Math.pow(this.endX - this.startX, 2) +
               Math.pow(this.endY - this.startY, 2)
           ) / 2;
-        this.draw(centerX, centerY, newRadius, newRadius);
-      } else {
-        this.draw(centerX, centerY, radiusX, radiusY);
+        this.radiusY = this.radiusX;
       }
+
+      this.drawWithPreview();
     }
   }
 
-  private draw(x: number, y: number, radiusX: number, radiusY: number) {
+  public static draw(
+    drawData: CircleDrawData,
+    context: CanvasRenderingContext2D
+  ) {
+    const {
+      centerX,
+      centerY,
+      radiusX,
+      radiusY,
+      rotation = 0,
+      startAngle = 0,
+      endAngle = 2 * Math.PI,
+      mode,
+    } = drawData;
+
+    console.log("draw", drawData);
+
+    context.beginPath();
+    context.ellipse(
+      centerX,
+      centerY,
+      radiusX,
+      radiusY,
+      rotation,
+      startAngle,
+      endAngle
+    );
+    if (mode === "fill") {
+      context.fill();
+    }
+    context.stroke();
+    context.beginPath();
+  }
+
+  private drawWithPreview() {
     const img = new Image();
     img.src = this.saved;
     img.onload = () => {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.context.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
       this.context.beginPath();
-      this.context.ellipse(x, y, radiusX, radiusY, 0, 0, 2 * Math.PI);
+      this.context.ellipse(
+        this.centerX,
+        this.centerY,
+        this.radiusX,
+        this.radiusY,
+        0,
+        0,
+        2 * Math.PI
+      );
       if (this.mode === "fill") {
         this.context.fill();
       }
