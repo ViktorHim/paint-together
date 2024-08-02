@@ -1,5 +1,5 @@
 import PaintSocket from "../socket/Socket";
-import { Figures } from "../types/DrawData";
+import { BrushDrawData, Figures } from "../types/DrawData";
 import Tool from "./Tool";
 
 class Brush extends Tool {
@@ -32,17 +32,26 @@ class Brush extends Tool {
   }
 
   drawBroadcast(x: number, y: number) {
-    Brush.draw(x, y, this.context);
-    this.socket.sendDrawData({
-      x,
-      y,
-      strokeColor: this.context.strokeStyle,
+    const drawData: BrushDrawData = {
+      point: { x, y },
+      strokeColor: this.strokeColor,
       figure: Figures.Brush,
-    });
+    };
+
+    Brush.draw(drawData, this.context);
+    this.socket.sendDrawData(drawData);
   }
 
-  public static draw(x: number, y: number, context: CanvasRenderingContext2D) {
-    context.lineTo(x, y);
+  public static draw(
+    drawData: BrushDrawData,
+    context: CanvasRenderingContext2D
+  ) {
+    const { point, strokeColor } = drawData;
+    console.log("draw");
+    if (strokeColor) {
+      context.strokeStyle = strokeColor;
+    }
+    context.lineTo(point.x, point.y);
     context.stroke();
   }
 }

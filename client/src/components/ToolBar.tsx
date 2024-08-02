@@ -4,11 +4,11 @@ import Brush from "../tools/Brush";
 import { ToolButton, ToolType } from "./ToolButton";
 import Rect from "../tools/Rect";
 import Line from "../tools/Line";
-import Eraser from "../tools/Eraser";
 import CanvasState from "../store/CanvasState";
 import { observer } from "mobx-react-lite";
 import Circle from "../tools/Circle";
 import Bucket from "../tools/Bucket";
+import Eraser from "../tools/Eraser";
 
 const paintTools = [
   { type: ToolType.BRUSH, toolClass: Brush },
@@ -26,6 +26,10 @@ export const ToolBar = observer(() => {
     setSelectedId(id);
   };
 
+  // console.log(ToolState.tool);
+
+  const onSaveHandler = () => {};
+
   return (
     <div className="toolbar">
       <div className="paint-tools">
@@ -36,10 +40,9 @@ export const ToolBar = observer(() => {
             type={tool.type}
             toolClass={tool.toolClass}
             isSelected={selectedId === index}
-            onClick={onSelectToolHandler}
+            onSelect={onSelectToolHandler}
           />
         ))}
-        {/* <input type="color" /> */}
       </div>
       <div className="save-tools">
         <button
@@ -52,7 +55,7 @@ export const ToolBar = observer(() => {
           onClick={() => CanvasState.redo()}
           disabled={!CanvasState.canRedo()}
         />
-        <button className="toolbar_btn save" />
+        <button className="toolbar_btn save" onClick={onSaveHandler} />
       </div>
     </div>
   );

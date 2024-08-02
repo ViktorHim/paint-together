@@ -1,5 +1,5 @@
 import PaintSocket from "../socket/Socket";
-import { Figures } from "../types/DrawData";
+import { Figures, LineDrawData } from "../types/DrawData";
 import Tool from "./Tool";
 
 class Line extends Tool {
@@ -24,11 +24,10 @@ class Line extends Tool {
     this.isMouseDown = false;
 
     this.socket.sendDrawData({
-      x1: this.startX,
-      y1: this.startY,
-      x2: this.endX,
-      y2: this.endY,
+      startPoint: { x: this.startX, y: this.startY },
+      endPoint: { x: this.endX, y: this.endY },
       figure: Figures.Line,
+      strokeColor: this.strokeColor,
     });
   }
 
@@ -49,15 +48,15 @@ class Line extends Tool {
   }
 
   public static draw(
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
+    drawData: LineDrawData,
     context: CanvasRenderingContext2D
   ) {
+    const { startPoint, endPoint, strokeColor } = drawData;
+
+    context.strokeStyle = strokeColor;
     context.beginPath();
-    context.moveTo(x1, y1);
-    context.lineTo(x2, y2);
+    context.moveTo(startPoint.x, startPoint.y);
+    context.lineTo(endPoint.x, endPoint.y);
     context.stroke();
     context.beginPath();
   }
@@ -66,6 +65,7 @@ class Line extends Tool {
     const img = new Image();
     img.src = this.saved;
     img.onload = () => {
+      this.context.strokeStyle = this.strokeColor;
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.context.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
       this.context.beginPath();

@@ -1,13 +1,18 @@
 import { drawMode } from "../tools/Tool";
+import { Point, Rectangle } from "./Shapes";
 
 export type DrawData =
   | BrushDrawData
+  | BucketDrawData
+  | EraserDrawData
   | LineDrawData
   | RectDrawData
   | CircleDrawData;
 
 export enum Figures {
   Brush,
+  Bucket,
+  Eraser,
   Line,
   Rect,
   Circle,
@@ -16,26 +21,31 @@ export enum Figures {
 type Color = string | CanvasGradient | CanvasPattern;
 
 export interface BrushDrawData {
-  x: number;
-  y: number;
-  strokeColor: Color;
-  figure: Figures.Brush;
+  point: Point;
+  strokeColor?: Color;
+  figure: Figures.Brush | Figures.Eraser;
+}
+
+export interface EraserDrawData {
+  point: Point;
+  figure: Figures.Eraser;
+}
+
+export interface BucketDrawData {
+  point: Point;
+  fillColor: Color;
+  figure: Figures.Bucket;
 }
 
 export interface LineDrawData {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
+  startPoint: Point;
+  endPoint: Point;
   strokeColor: Color;
   figure: Figures.Line;
 }
 
 export interface RectDrawData {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  rect: Rectangle;
   strokeColor: Color;
   fillColor: Color;
   mode: drawMode;
@@ -43,13 +53,10 @@ export interface RectDrawData {
 }
 
 export interface CircleDrawData {
-  centerX: number;
-  centerY: number;
-  radiusX: number;
-  radiusY: number;
+  center: Point;
+  radius: Point;
+  angle?: Point;
   rotation?: number;
-  startAngle?: number;
-  endAngle?: number;
   mode: drawMode;
   strokeColor: Color;
   fillColor: Color;

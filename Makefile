@@ -29,6 +29,11 @@ up-prod:
 run-prod:
 	docker-compose -f ${DOCKER_COMPOSE_FILE} up --build
 
+# delete containers, images and networks
+clear-prod:
+	docker-compose -f ${DOCKER_COMPOSE_FILE} down --volumes --rmi all
+
+
 # development targets
 
 build-dev:
@@ -39,3 +44,13 @@ up-dev:
 
 run-dev:
 	docker-compose -f ${DOCKER_COMPOSE_DEV_FILE} up --build
+
+# delete containers, images and networks
+clear-dev:
+	docker-compose -f ${DOCKER_COMPOSE_DEV_FILE} down --volumes --rmi all
+
+
+# delete all
+clear:
+	docker-compose -f ${DOCKER_COMPOSE_DEV_FILE} down --volumes --rmi all
+	docker-compose -f ${DOCKER_COMPOSE_FILE} down --volumes --rmi all

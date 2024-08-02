@@ -1,22 +1,28 @@
+import { makeAutoObservable, observable } from "mobx";
 import Brush from "../tools/Brush";
+import Bucket from "../tools/Bucket";
 import Circle from "../tools/Circle";
 import Line from "../tools/Line";
 import Rect from "../tools/Rect";
 import { DrawData, Figures } from "../types/DrawData";
+import { Point } from "../types/Shapes";
+import Eraser from "../tools/Eraser";
 
-type MessageMethod = "connection" | "draw" | "finish";
+type MessageMethod = "connection" | "draw" | "finish" | "clear" | "cursor";
 
 interface Message {
   method: MessageMethod;
   id: string;
   username: string;
   drawData?: DrawData;
+  cursorPosition?: Point;
 }
 
 class PaintSocket {
   socket: WebSocket;
   id: string;
   canvas: HTMLCanvasElement;
+  cursors: { [name: string]: Point } = {};
   username: string;
 
   constructor(
@@ -25,6 +31,7 @@ class PaintSocket {
     canvas: HTMLCanvasElement,
     username: string
   ) {
+    makeAutoObservable(this);
     this.socket = socket;
     this.id = id;
     this.canvas = canvas;
@@ -44,10 +51,11 @@ class PaintSocket {
 
     this.socket!.onmessage = (event: MessageEvent) => {
       const message = JSON.parse(event.data) as Message;
-
       switch (message.method) {
         case "connection":
-          console.log(`user ${message.username} is connected`);
+          {
+            console.log(`user ${message.username} is connected`);
+          }
           break;
         case "draw":
           {
@@ -59,6 +67,14 @@ class PaintSocket {
             this.finishHandler();
           }
           break;
+        case "clear":
+          {
+            this.clearHandler();
+          }
+          break;
+        case "cursor": {
+          this.cursorHandler(message);
+        }
       }
     };
   }
@@ -68,6 +84,24 @@ class PaintSocket {
       id: this.id,
       username: this.username,
       method: "finish",
+    };
+    this.socket.send(JSON.stringify(message));
+  }
+
+  public sendCursor(cursorPosition: Point) {
+    const message: Message = {
+      id: this.id,
+      username: this.username,
+      method: "cursor",
+      cursorPosition,
+    };
+    this.socket.send(JSON.stringify(message));
+  }
+  public sendClear() {
+    const message: Message = {
+      id: this.id,
+      username: this.username,
+      method: "clear",
     };
     this.socket.send(JSON.stringify(message));
   }
@@ -89,33 +123,57 @@ class PaintSocket {
       switch (message.drawData.figure) {
         case Figures.Brush:
           {
-            const { x, y } = message.drawData;
-            Brush.draw(x, y, context);
+            Brush.draw(message.drawData, context);
+          }
+          break;
+        case Figures.Bucket:
+          {
+            Bucket.draw(message.drawData, this.canvas);
           }
           break;
         case Figures.Rect:
           {
-            const { x, y, height, width, mode } = message.drawData;
-            Rect.draw(x, y, width, height, mode, context);
+            Rect.draw(message.drawData, context);
           }
           break;
         case Figures.Line:
           {
-            const { x1, y1, x2, y2 } = message.drawData;
-
-            Line.draw(x1, y1, x2, y2, context);
+            Line.draw(message.drawData, context);
           }
           break;
-        case Figures.Circle: {
-          Circle.draw(message.drawData!, context);
-        }
+        case Figures.Circle:
+          {
+            Circle.draw(message.drawData, context);
+          }
+          break;
+        case Figures.Eraser:
+          {
+            Eraser.draw(message.drawData, context);
+          }
+          break;
       }
     }
+  }
+  private setCursor(p: Point, username: string) {
+    this.cursors[username] = p;
   }
 
   private finishHandler() {
     const context = this.canvas.getContext("2d")!;
     context.beginPath();
+  }
+
+  private clearHandler() {
+    const context = this.canvas.getContext("2d")!;
+    context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  private cursorHandler(message: Message) {
+    const { username, cursorPosition } = message;
+
+    if (this.username !== username) {
+      this.setCursor(cursorPosition!, username);
+    }
   }
 }
 

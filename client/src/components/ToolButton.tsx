@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import PaintSocket from "../socket/Socket";
 import CanvasState from "../store/CanvasState";
 import SocketState from "../store/SocketState";
@@ -21,14 +22,14 @@ export interface ToolButtonProps {
   type: ToolType;
   toolClass: new (canvas: HTMLCanvasElement, socket: PaintSocket) => Tool;
   isSelected: boolean;
-  onClick: (id: number) => void;
+  onSelect: (id: number) => void;
   id: number;
 }
 
 export const ToolButton = ({
   type,
   toolClass,
-  onClick,
+  onSelect,
   isSelected,
   id,
 }: ToolButtonProps) => {
@@ -39,7 +40,7 @@ export const ToolButton = ({
         SocketState.socket!
       )
     );
-    onClick(id);
+    onSelect(id);
   };
 
   return (

@@ -47,14 +47,12 @@ class Circle extends Tool {
     this.isMouseDown = false;
 
     this.socket.sendDrawData({
-      centerX: this.centerX,
-      centerY: this.centerY,
-      radiusX: this.radiusX,
-      radiusY: this.radiusY,
+      center: { x: this.centerX, y: this.centerY },
+      radius: { x: this.radiusX, y: this.radiusY },
       mode: this.mode,
       figure: Figures.Circle,
-      strokeColor: this.context.strokeStyle,
-      fillColor: this.context.fillStyle,
+      strokeColor: this.strokeColor,
+      fillColor: this.fillColor,
     });
   }
 
@@ -94,27 +92,27 @@ class Circle extends Tool {
     context: CanvasRenderingContext2D
   ) {
     const {
-      centerX,
-      centerY,
-      radiusX,
-      radiusY,
+      center,
+      radius,
       rotation = 0,
-      startAngle = 0,
-      endAngle = 2 * Math.PI,
+      angle = { x: 0, y: Math.PI * 2 },
       mode,
+      strokeColor,
+      fillColor,
     } = drawData;
 
-    console.log("draw", drawData);
+    context.fillStyle = fillColor;
+    context.strokeStyle = strokeColor;
 
     context.beginPath();
     context.ellipse(
-      centerX,
-      centerY,
-      radiusX,
-      radiusY,
+      center.x,
+      center.y,
+      radius.x,
+      radius.y,
       rotation,
-      startAngle,
-      endAngle
+      angle.x,
+      angle.y
     );
     if (mode === "fill") {
       context.fill();
@@ -127,6 +125,8 @@ class Circle extends Tool {
     const img = new Image();
     img.src = this.saved;
     img.onload = () => {
+      this.context.fillStyle = this.fillColor;
+      this.context.strokeStyle = this.strokeColor;
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.context.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
       this.context.beginPath();

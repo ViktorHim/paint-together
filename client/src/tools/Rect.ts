@@ -1,5 +1,5 @@
 import PaintSocket from "../socket/Socket";
-import { Figures } from "../types/DrawData";
+import { Figures, RectDrawData } from "../types/DrawData";
 import Tool, { drawMode } from "./Tool";
 
 class Rect extends Tool {
@@ -44,12 +44,11 @@ class Rect extends Tool {
     this.isMouseDown = false;
 
     this.socket.sendDrawData({
-      x: this.startX,
-      y: this.startY,
-      width: this.width,
-      height: this.height,
+      rect: { x: this.startX, y: this.startY, w: this.width, h: this.height },
       mode: this.mode,
       figure: Figures.Rect,
+      fillColor: this.fillColor,
+      strokeColor: this.strokeColor,
     });
 
     this.socket.sendFinish();
@@ -87,19 +86,20 @@ class Rect extends Tool {
   }
 
   public static draw(
-    x: number,
-    y: number,
-    w: number,
-    h: number,
-    mode: drawMode,
+    drawData: RectDrawData,
     context: CanvasRenderingContext2D
   ) {
+    const { rect, fillColor, strokeColor, mode } = drawData;
+
+    context.fillStyle = fillColor;
+    context.strokeStyle = strokeColor;
     context.beginPath();
-    context.rect(x, y, w, h);
+    context.rect(rect.x, rect.y, rect.w, rect.h);
     if (mode === "fill") {
       context.fill();
     }
     context.stroke();
+    context.beginPath();
   }
 
   private drawWithPreview(x: number, y: number, w: number, h: number) {

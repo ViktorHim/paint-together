@@ -2,9 +2,9 @@ import { makeAutoObservable } from "mobx";
 import PaintSocket from "../socket/Socket";
 
 class SocketState {
-  socket?: PaintSocket;
+  socket: PaintSocket | null = null;
   username: string | null = null;
-  id?: string;
+  id: string = "";
   canvas?: HTMLCanvasElement;
 
   constructor() {
@@ -17,10 +17,19 @@ class SocketState {
 
   setId(id: string) {
     this.id = id;
+    if (this.socket) {
+      this.socket.id = id;
+    }
   }
 
   setCanvas(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
+  }
+
+  get Cursors() {
+    if (this.socket) {
+      return this.socket.cursors;
+    }
   }
 
   initSocket(socket: WebSocket) {

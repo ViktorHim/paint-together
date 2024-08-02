@@ -1,8 +1,10 @@
+import { observer } from "mobx-react-lite";
+import SocketState from "../store/SocketState";
 import ToolState from "../store/ToolState";
 import cls from "../styles/setting_bar.module.scss";
 import { drawMode } from "../tools/Tool";
 
-export const SettingBar = () => {
+export const SettingBar = observer(() => {
   return (
     <div className={cls.setting_bar}>
       <div className={cls.setting_bar_left}>
@@ -35,7 +37,7 @@ export const SettingBar = () => {
         </div>
         <div>
           <label htmlFor="color" className={cls.label}>
-            Цвет
+            Цвет обводки
           </label>
           <input
             id="color"
@@ -55,7 +57,9 @@ export const SettingBar = () => {
         </div>
       </div>
 
-      <button onClick={() => ToolState.clearCanvas()}>Очистить холст</button>
+      <button onClick={() => SocketState.socket?.sendClear()}>
+        Очистить холст
+      </button>
     </div>
   );
-};
+});

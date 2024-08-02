@@ -1,3 +1,5 @@
+import PaintSocket from "../socket/Socket";
+import { BucketDrawData, Figures } from "../types/DrawData";
 import Tool from "./Tool";
 
 type ColorRGBA = {
@@ -8,8 +10,8 @@ type ColorRGBA = {
 };
 
 class Bucket extends Tool {
-  constructor(canvas: HTMLCanvasElement) {
-    super(canvas);
+  constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
+    super(canvas, socket);
     this.listenEvents();
   }
 
@@ -19,15 +21,27 @@ class Bucket extends Tool {
 
   protected mouseDownHandler(event: MouseEvent) {
     this.isMouseDown = true;
-    // this.context?.beginPath();холст
-    console.log("click");
-
     const x = this.getClickPosX(event);
     const y = this.getClickPosY(event);
-    this.draw(x, y);
+    this.drawBroadcast(x, y);
   }
 
-  private getPixelColor(x: number, y: number, imageData: ImageData): ColorRGBA {
+  private drawBroadcast(x: number, y: number) {
+    const drawData: BucketDrawData = {
+      point: { x, y },
+      fillColor: this.fillColor,
+      figure: Figures.Bucket,
+    };
+
+    Bucket.draw(drawData, this.canvas);
+    this.socket.sendDrawData(drawData);
+  }
+
+  private static getPixelColor(
+    x: number,
+    y: number,
+    imageData: ImageData
+  ): ColorRGBA {
     const index = (y * imageData.width + x) * 4;
     return {
       r: imageData.data[index],
@@ -37,7 +51,7 @@ class Bucket extends Tool {
     };
   }
 
-  private setPixelColor(
+  private static setPixelColor(
     x: number,
     y: number,
     color: ColorRGBA,
@@ -51,7 +65,7 @@ class Bucket extends Tool {
     imageData.data[index + 3] = color.a;
   }
 
-  private colorsMatch(
+  private static colorsMatch(
     firstColor: ColorRGBA,
     secondColor: ColorRGBA,
     tolerance = 0
@@ -64,51 +78,7 @@ class Bucket extends Tool {
     );
   }
 
-  private draw(x: number, y: number) {
-    const imageData = this.context.getImageData(
-      0,
-      0,
-      this.canvas.width,
-      this.canvas.height
-    );
-
-    const fillColor = this.hexToRgb(this.context.strokeStyle as string);
-    const targetColor = this.getPixelColor(x, y, imageData);
-
-    if (this.colorsMatch(targetColor, fillColor)) {
-      return;
-    }
-
-    const pixelStack = [{ x, y }];
-
-    const addRightPixel = (x: number, y: number) => {
-      if (
-        x >= 0 &&
-        x <= this.canvas.width - 1 &&
-        y >= 0 &&
-        y <= this.canvas.height - 1
-      ) {
-        pixelStack.push({ x, y });
-      }
-    };
-
-    while (pixelStack.length > 0) {
-      const { x, y } = pixelStack.pop()!;
-      const currentColor = this.getPixelColor(x, y, imageData);
-
-      this.setPixelColor(x, y, fillColor, imageData);
-      if (this.colorsMatch(currentColor, targetColor)) {
-        addRightPixel(x - 1, y);
-        addRightPixel(x + 1, y);
-        addRightPixel(x, y - 1);
-        addRightPixel(x, y + 1);
-      }
-    }
-
-    this.context.putImageData(imageData, 0, 0);
-  }
-
-  hexToRgb(hexCode: string): ColorRGBA {
+  private static hexToRgb(hexCode: string): ColorRGBA {
     const hex = hexCode.replace(/^#/, "");
 
     let r = 0,
@@ -122,6 +92,45 @@ class Bucket extends Tool {
     a = 255;
 
     return { r, g, b, a };
+  }
+
+  public static draw(drawData: BucketDrawData, canvas: HTMLCanvasElement) {
+    const context = canvas.getContext("2d");
+    const { point, fillColor } = drawData;
+
+    if (context === null) return;
+
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+    const fillColorRgb = Bucket.hexToRgb(fillColor as string);
+    const targetColor = Bucket.getPixelColor(point.x, point.y, imageData);
+
+    if (this.colorsMatch(targetColor, fillColorRgb)) {
+      return;
+    }
+
+    const pixelStack = [{ x: point.x, y: point.y }];
+
+    const addRightPixel = (x: number, y: number) => {
+      if (x >= 0 && x <= canvas.width - 1 && y >= 0 && y <= canvas.height - 1) {
+        pixelStack.push({ x, y });
+      }
+    };
+
+    while (pixelStack.length > 0) {
+      const { x, y } = pixelStack.pop()!;
+      const currentColor = Bucket.getPixelColor(x, y, imageData);
+
+      Bucket.setPixelColor(x, y, fillColorRgb, imageData);
+      if (Bucket.colorsMatch(currentColor, targetColor)) {
+        addRightPixel(x - 1, y);
+        addRightPixel(x + 1, y);
+        addRightPixel(x, y - 1);
+        addRightPixel(x, y + 1);
+      }
+    }
+
+    context.putImageData(imageData, 0, 0);
   }
 }
 

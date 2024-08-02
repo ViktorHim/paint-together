@@ -18,6 +18,12 @@ app.ws('/', (ws, req) => {
             case "finish":
                 brodcastConnection(ws, msg);
                 break;
+            case "clear":
+                brodcastConnection(ws, msg);
+                break;
+            case "cursor":
+                brodcastConnection(ws, msg);
+                break;
         }
     })
 
@@ -38,6 +44,3 @@ const brodcastConnection = (ws, msg) => {
         }
     });
 }
-
-
-

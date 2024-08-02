@@ -9,6 +9,9 @@ class Tool {
   protected socket: PaintSocket;
   protected mode: drawMode = "border";
 
+  protected fillColor: string = "black";
+  protected strokeColor: string = "black";
+
   protected mouseUpHandler?(event: MouseEvent): void;
   protected mouseDownHandler?(event: MouseEvent): void;
   protected mouseMoveHandler?(event: MouseEvent): void;
@@ -33,12 +36,12 @@ class Tool {
     this.mode = mode;
   }
 
-  public set fillColor(color: string) {
-    this.context.fillStyle = color;
+  public set FillColor(color: string) {
+    this.fillColor = color;
   }
 
-  public set strokeColor(color: string) {
-    this.context.strokeStyle = color;
+  public set StrokeColor(color: string) {
+    this.strokeColor = color;
   }
 
   public set lineWidth(width: number) {
