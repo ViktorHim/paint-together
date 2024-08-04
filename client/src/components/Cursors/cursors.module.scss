@@ -1,22 +1,14 @@
-.cursor-container {
+.cursor_container {
   position: relative;
   height: 15px;
   width: 15px;
-}
-
-.cursor-overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
 }
 
 .cursor {
   position: absolute;
 }
 
-.cross-line {
+.cross_line {
   position: absolute;
   background: red;
 }

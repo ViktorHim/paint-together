@@ -16,7 +16,8 @@ class Rect extends Tool {
     this.listenEvents();
   }
 
-  private listenEvents() {
+  protected listenEvents() {
+    super.listenEvents();
     this.canvas.onmouseup = this.mouseUpHandler.bind(this);
     this.canvas.onmousedown = this.mouseDownHandler.bind(this);
     this.canvas.onmousemove = this.mouseMoveHandler.bind(this);

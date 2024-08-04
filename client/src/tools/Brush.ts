@@ -5,33 +5,33 @@ import Tool from "./Tool";
 class Brush extends Tool {
   constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
     super(canvas, socket);
-    this.listenEvents();
   }
 
-  listenEvents() {
+  protected listenEvents() {
+    super.listenEvents();
     this.canvas.onmouseup = this.mouseUpHandler.bind(this);
     this.canvas.onmousedown = this.mouseDownHandler.bind(this);
     this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
   }
 
-  mouseUpHandler(event: MouseEvent) {
+  protected mouseUpHandler(event: MouseEvent) {
     this.isMouseDown = false;
     this.socket.sendFinish();
   }
 
-  mouseDownHandler(event: MouseEvent) {
+  protected mouseDownHandler(event: MouseEvent) {
     this.isMouseDown = true;
     this.context?.beginPath();
     this.context?.moveTo(this.getClickPosX(event), this.getClickPosY(event));
   }
 
-  mouseMoveHandler(event: MouseEvent) {
+  protected mouseMoveHandler(event: MouseEvent) {
     if (this.isMouseDown) {
       this.drawBroadcast(this.getClickPosX(event), this.getClickPosY(event));
     }
   }
 
-  drawBroadcast(x: number, y: number) {
+  protected drawBroadcast(x: number, y: number) {
     const drawData: BrushDrawData = {
       point: { x, y },
       strokeColor: this.strokeColor,
@@ -47,7 +47,6 @@ class Brush extends Tool {
     context: CanvasRenderingContext2D
   ) {
     const { point, strokeColor } = drawData;
-    console.log("draw");
     if (strokeColor) {
       context.strokeStyle = strokeColor;
     }

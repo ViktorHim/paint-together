@@ -15,7 +15,8 @@ class Bucket extends Tool {
     this.listenEvents();
   }
 
-  private listenEvents() {
+  protected listenEvents() {
+    super.listenEvents();
     this.canvas.onmousedown = this.mouseDownHandler.bind(this);
   }
 

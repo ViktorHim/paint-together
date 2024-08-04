@@ -1,0 +1,32 @@
+@import "../../styles/variables.scss";
+
+.setting_bar {
+  // height: $toolbar-h;
+  background-color: #fff;
+  // display: flex;
+  // align-items: center;
+  padding: 10px;
+  // position: absolute;
+  // right: 0;
+  // left: 0;
+  // top: $toolbar-h;
+  box-shadow: 0 4px 5px gray;
+  display: flex;
+  // justify-content: space-between;
+
+  &_left {
+    // width: 50%;
+    // display: flex;
+    // justify-content: space-between;
+    // align-items: center;
+  }
+}
+
+.label {
+  margin-right: 15px;
+}
+
+.clear {
+  position: absolute;
+  bottom: 30px;
+}

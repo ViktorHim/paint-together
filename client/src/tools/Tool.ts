@@ -3,62 +3,74 @@ import PaintSocket from "../socket/Socket";
 export type drawMode = "border" | "fill";
 
 class Tool {
-  protected canvas: HTMLCanvasElement;
-  protected context: CanvasRenderingContext2D;
-  protected isMouseDown: boolean;
-  protected socket: PaintSocket;
-  protected mode: drawMode = "border";
+    protected canvas: HTMLCanvasElement;
+    protected socket: PaintSocket;
+    protected context: CanvasRenderingContext2D;
 
-  protected fillColor: string = "black";
-  protected strokeColor: string = "black";
+    protected isMouseDown: boolean;
 
-  protected mouseUpHandler?(event: MouseEvent): void;
-  protected mouseDownHandler?(event: MouseEvent): void;
-  protected mouseMoveHandler?(event: MouseEvent): void;
+    protected mode: drawMode = "border";
+    protected fillColor: string = "black";
+    protected strokeColor: string = "black";
 
-  constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
-    this.socket = socket;
-    this.canvas = canvas;
-    this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
-    this.isMouseDown = false;
-    this.removeEvents();
-  }
+    protected mouseUpHandler?(event: MouseEvent): void;
+    protected mouseDownHandler?(event: MouseEvent): void;
+    protected mouseMoveHandler?(event: MouseEvent): void;
 
-  private removeEvents() {
-    this.canvas.onmouseup = null;
-    this.canvas.onmousedown = null;
-    this.canvas.onmousemove = null;
-    document.body.onkeydown = null;
-    document.body.onkeyup = null;
-  }
+    constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
+        this.socket = socket;
+        this.canvas = canvas;
+        this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
+        this.isMouseDown = false;
+        this.removeEvents();
+        this.listenEvents();
+    }
 
-  public set drawMode(mode: drawMode) {
-    this.mode = mode;
-  }
+    protected listenEvents() {
+        this.canvas.onmouseleave = this.mouseLeaveHandler.bind(this);
+    }
 
-  public set FillColor(color: string) {
-    this.fillColor = color;
-  }
+    private mouseLeaveHandler() {
+        this.context.beginPath();
+        this.isMouseDown = false;
+    }
 
-  public set StrokeColor(color: string) {
-    this.strokeColor = color;
-  }
+    private removeEvents() {
+        this.canvas.onmouseup = null;
+        this.canvas.onmousedown = null;
+        this.canvas.onmousemove = null;
+        this.canvas.onmouseleave = null;
+        document.body.onkeydown = null;
+        document.body.onkeyup = null;
+    }
 
-  public set lineWidth(width: number) {
-    this.context.lineWidth = width;
-  }
+    public set drawMode(mode: drawMode) {
+        this.mode = mode;
+    }
 
-  public clear() {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  }
+    public set FillColor(color: string) {
+        this.fillColor = color;
+    }
 
-  protected getClickPosX(event: MouseEvent): number {
-    return event.pageX - (event.target as HTMLElement).offsetLeft;
-  }
+    public set StrokeColor(color: string) {
+        this.strokeColor = color;
+    }
 
-  protected getClickPosY(event: MouseEvent): number {
-    return event.pageY - (event.target as HTMLElement).offsetTop;
-  }
+    public set lineWidth(width: number) {
+        this.context.lineWidth = width;
+    }
+
+    public clear() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    protected getClickPosX(event: MouseEvent): number {
+        return event.pageX - (event.target as HTMLElement).offsetLeft;
+    }
+
+    protected getClickPosY(event: MouseEvent): number {
+        return event.pageY - (event.target as HTMLElement).offsetTop;
+    }
 }
 
 export default Tool;
