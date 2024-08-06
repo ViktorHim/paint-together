@@ -1,11 +1,14 @@
 import PaintSocket from "../socket/Socket";
+import { Settings } from "../types/Settings";
 
-export type drawMode = "border" | "fill";
+export type drawMode = "border" | "fill" | "solid";
 
-class Tool {
-    protected canvas: HTMLCanvasElement;
-    protected socket: PaintSocket;
-    protected context: CanvasRenderingContext2D;
+abstract class Tool {
+    protected toolName: string;
+
+    protected readonly canvas: HTMLCanvasElement;
+    protected readonly socket: PaintSocket;
+    protected readonly context: CanvasRenderingContext2D;
 
     protected isMouseDown: boolean;
 
@@ -17,11 +20,14 @@ class Tool {
     protected mouseDownHandler?(event: MouseEvent): void;
     protected mouseMoveHandler?(event: MouseEvent): void;
 
+    abstract hasDrawProperty(setting : Settings): boolean;
+
     constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
         this.socket = socket;
         this.canvas = canvas;
         this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
         this.isMouseDown = false;
+        this.toolName = "tool";
         this.removeEvents();
         this.listenEvents();
     }
@@ -58,6 +64,10 @@ class Tool {
 
     public set lineWidth(width: number) {
         this.context.lineWidth = width;
+    }
+
+    public get ToolName(): string {
+        return this.toolName;
     }
 
     public clear() {

@@ -1,31 +1,43 @@
 import PaintSocket from "../socket/Socket";
 import { BrushDrawData, Figures } from "../types/DrawData";
+import { Settings } from "../types/Settings";
 import Brush from "./Brush";
 
 class Eraser extends Brush {
-  constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
-    super(canvas, socket);
-  }
+    constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
+        super(canvas, socket);
+        this.toolName = "Eraser";
+    }
 
-  drawBroadcast(x: number, y: number) {
-    const drawData: BrushDrawData = {
-      point: { x, y },
-      strokeColor: this.strokeColor,
-      figure: Figures.Eraser,
-    };
+    public override hasDrawProperty(setting: Settings): boolean {
+        switch(setting) {
+        case Settings.DRAW_MODE: return false;
+        case Settings.LINE_WIDTH: return true;
+        case Settings.STROKE_COLOR: return false;
+        case Settings.FILL_COLOR: return false;
+        case Settings.GENERAL_COLOR: return false;
+        }
+    }
 
-    Brush.draw(drawData, this.context);
-    this.socket.sendDrawData(drawData);
-  }
+    protected override drawBroadcast(x: number, y: number) {
+        const drawData: BrushDrawData = {
+            point: { x, y },
+            strokeColor: this.strokeColor,
+            figure: Figures.Eraser,
+        };
 
-  public static draw(
-    drawData: BrushDrawData,
-    context: CanvasRenderingContext2D
-  ) {
-    const { point } = drawData;
-    context.strokeStyle = "white";
-    context.lineTo(point.x, point.y);
-    context.stroke();
-  }
+        Brush.draw(drawData, this.context);
+        this.socket.sendDrawData(drawData);
+    }
+
+    public static override draw(
+        drawData: BrushDrawData,
+        context: CanvasRenderingContext2D
+    ) {
+        const { point } = drawData;
+        context.strokeStyle = "#ffffff";
+        context.lineTo(point.x, point.y);
+        context.stroke();
+    }
 }
 export default Eraser;

@@ -1,0 +1,12 @@
+.palette {
+    display: grid;
+    grid-template-columns: repeat(6, 30px);
+    grid-template-rows: repeat(2, 30px);
+}
+
+.color_box {
+    height: 30px;
+    width: 30px;
+    border: 1px solid black;
+    cursor: pointer;
+}

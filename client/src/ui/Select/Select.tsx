@@ -6,15 +6,17 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
     label: string;
     name: string;
     children: ReactNode;
+    value?: string;
 }
 
-export const Select = ({label, className, name, children, ...others}: SelectProps) => {
+export const Select = ({label, className, name, children, value, ...others}: SelectProps) => {
     return (
         <>
             <label htmlFor={name} className={cls.label}>
                 {label}
             </label>
             <select
+                value={value}
                 name={name}
                 id={name}
                 className={[className, cls.select].join(" ")}
