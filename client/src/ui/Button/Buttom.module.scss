@@ -1,0 +1,9 @@
+@import "../../styles//variables.scss";
+
+
+.button {
+    padding: 10px;
+    border: 1px solid black;
+    background-color: #fff;
+    font-size: $default-font-size;
+}

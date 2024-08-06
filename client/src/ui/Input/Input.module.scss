@@ -1,0 +1,15 @@
+@import "../../styles//variables.scss";
+
+.input {
+    padding: 5px;
+    border: 1px solid black;
+    background-color: #fff;
+    font-size: $default-font-size;
+    &:focus {
+        outline: none;
+    }
+}
+
+.label {
+  margin-right: 15px;
+}

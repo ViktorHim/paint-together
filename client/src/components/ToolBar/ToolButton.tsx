@@ -2,8 +2,6 @@ import cls from "./toolbar.module.scss";
 import ToolState from "../../store/ToolState";
 import CanvasState from "../../store/CanvasState";
 import SocketState from "../../store/SocketState";
-import PaintSocket from "../../socket/Socket";
-import Tool from "../../tools/Tool";
 import Brush from "../../tools/Brush";
 import Bucket from "../../tools/Bucket";
 import Circle from "../../tools/Circle";
@@ -43,7 +41,7 @@ export const ToolButton = ({
     const onClickHandler = () => {
         ToolState.setTool(
             new ToolConstructor[type](
-        CanvasState.canvas as HTMLCanvasElement,
+        CanvasState.canvas!,
         SocketState.socket!
             )
         );

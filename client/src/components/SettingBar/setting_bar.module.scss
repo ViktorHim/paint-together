@@ -1,24 +1,18 @@
 @import "../../styles/variables.scss";
 
 .setting_bar {
-  // height: $toolbar-h;
+  width: 100%;
   background-color: #fff;
-  // display: flex;
-  // align-items: center;
   padding: 10px;
-  // position: absolute;
-  // right: 0;
-  // left: 0;
-  // top: $toolbar-h;
   box-shadow: 0 4px 5px gray;
   display: flex;
-  // justify-content: space-between;
 
-  &_left {
-    // width: 50%;
-    // display: flex;
-    // justify-content: space-between;
-    // align-items: center;
+  &_list {
+      list-style: none;
+
+    li:not(:last-child) {
+        margin-bottom: 15px;
+    }
   }
 }
 
@@ -29,4 +23,9 @@
 .clear {
   position: absolute;
   bottom: 30px;
+}
+
+.color {
+  height: 40px;
+  width: 40px;
 }
