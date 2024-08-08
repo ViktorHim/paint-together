@@ -1,4 +1,11 @@
 .status_bar {
-    
-  bottom: 0;
+  box-shadow: 0 4px 5px gray;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 10px;
+  button {
+    margin-bottom: 10px;
+  }
 }

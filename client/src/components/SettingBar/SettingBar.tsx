@@ -31,6 +31,9 @@ export const SettingBar = observer(() => {
     const changeLineWidth = (event: any) => {
         ToolState.setLineWidth(Number(event.target.value));
     }
+
+    if (!ToolState.tool) return null;
+
     return (
         <div className={cls.setting_bar}>
             <strong>{ToolState.getToolName()}</strong>
@@ -89,9 +92,6 @@ export const SettingBar = observer(() => {
                 <Palette name={Settings.GENERAL_COLOR} onSelect={changeColor}/>
 
             </SettingList>
-            <Button className={cls.clear} onClick={() => SocketState.socket?.sendClear()}>
-                Clear canvas
-            </Button>
         </div>
     );
 });

@@ -35,9 +35,9 @@ class SocketState {
     initSocket(socket: WebSocket) {
         this.socket = new PaintSocket(
             socket,
-      this.id!,
-      this.canvas!,
-      this.username!
+            this.id!,
+            this.canvas!,
+            this.username!
         );
     }
 }

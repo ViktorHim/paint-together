@@ -8,6 +8,8 @@ import { DrawData, Figures } from "../types/DrawData";
 import { Point } from "../types/Shapes";
 import Eraser from "../tools/Eraser";
 
+import {toast} from "react-toastify";
+
 type MessageMethod = "connection" | "draw" | "finish" | "clear" | "cursor";
 
 interface Message {
@@ -53,8 +55,12 @@ class PaintSocket {
         const message = JSON.parse(event.data) as Message;
         switch (message.method) {
         case "connection":
-            {
-                console.log(`user ${message.username} is connected`);
+            {   
+                if(this.username === message.username) {
+                    toast.success(`You has connected`);
+                } else {
+                    toast.success(`user ${message.username} has connected`);
+                }
             }
             break;
         case "draw":

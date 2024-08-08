@@ -44,7 +44,6 @@ export const Canvas = observer(() => {
     const onMouseMoveHandler = (event: any) => {
         const x = event.pageX - (event.target as HTMLElement).offsetLeft;
         const y = event.pageY - (event.target as HTMLElement).offsetTop;
-        // CanvasState.setCursorPosition(x, y);
         sendCursor(x, y);
     };
 
@@ -53,7 +52,7 @@ export const Canvas = observer(() => {
     };
 
     return (
-        <div className={cls.canvas}>
+        <div className={cls.canvas_container}>
             <canvas
                 onMouseDown={onMouseDownHandler}
                 onMouseMove={onMouseMoveHandler}

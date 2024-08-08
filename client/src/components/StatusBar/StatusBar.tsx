@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import cls from "./status_bar.module.scss";
 import CanvasState from "../../store/CanvasState";
 import SocketState from "../../store/SocketState";
+import { Button } from "../../ui/Button/Button";
 
 export const StatusBar = observer(() => {
     const position = CanvasState.cursorPosition;
@@ -12,14 +13,16 @@ export const StatusBar = observer(() => {
 
     return (
         <div className={cls.status_bar}>
-            <div className={cls.position}>
-        Cursor position:
-                {position ? ` x: ${position.x} y: ${position.y}` : ""}
-            </div>
-            <div className="">
-                {`Size: ${CanvasState.canvas?.width} x ${CanvasState.canvas?.height}`}
-            </div>
-            <button onClick={onConnectionHandler}>Войти</button>
+            <Button>
+                Sign out
+            </Button>
+            <Button>
+                Share link
+            </Button>
+            <Button onClick={() => SocketState.socket?.sendClear()}>
+                Clear canvas
+            </Button>
+
         </div>
     );
 });

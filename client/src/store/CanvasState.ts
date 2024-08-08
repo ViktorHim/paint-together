@@ -70,6 +70,13 @@ class CanvasState {
             };
         }
     }
+
+    createImage() {
+        if(this.canvas) {
+            return this.canvas.toDataURL("image/png");
+        }
+        return null;
+    }
 }
 
 export default new CanvasState();

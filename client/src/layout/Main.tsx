@@ -5,5 +5,5 @@ export interface MainProps {
 }
 
 export const Main: FC<MainProps> = ({ children }) => {
-  return <div className="main">{children}</div>;
+    return <div className="main">{children}</div>;
 };

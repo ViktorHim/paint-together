@@ -12,7 +12,20 @@ export const ToolBar = observer(() => {
         setSelectedType(toolType);
     };
 
-    const onSaveHandler = () => {};
+    const onSaveHandler = () => {
+        const image = CanvasState.createImage();
+
+        if(!image) return;
+
+        const link = document.createElement("a");
+        link.href = image;
+        link.download = "picture.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+    };
 
     return (
         <div className={cls.toolbar}>
