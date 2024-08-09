@@ -1,0 +1,1 @@
+export const createRoomId = () : string => (+new Date()).toString(16);

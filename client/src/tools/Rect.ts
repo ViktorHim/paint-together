@@ -61,6 +61,7 @@ class Rect extends Tool {
             figure: Figures.Rect,
             fillColor: this.fillColor,
             strokeColor: this.strokeColor,
+            lineWidth: this.lineWidth,
         });
 
         SocketState.sendFinish();
@@ -101,13 +102,13 @@ class Rect extends Tool {
         drawData: RectDrawData,
         context: CanvasRenderingContext2D
     ) {
-        const { rect, fillColor, strokeColor, mode } = drawData;
-
+        const { rect, fillColor, strokeColor, mode, lineWidth } = drawData;
         context.fillStyle = fillColor;
         context.strokeStyle = strokeColor;
+        context.lineWidth = lineWidth;
         context.beginPath();
         context.rect(rect.x, rect.y, rect.w, rect.h);
-        if (mode === "fill") {
+        if (mode === "fill" || mode === "solid") {
             context.fill();
         }
         context.stroke();
@@ -120,6 +121,7 @@ class Rect extends Tool {
         img.onload = () => {
             this.context.fillStyle = this.fillColor;
             this.context.strokeStyle = this.mode === "solid" ? this.fillColor : this.strokeColor;
+            this.context.lineWidth = this.lineWidth;
 
 
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);

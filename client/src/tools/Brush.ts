@@ -48,6 +48,7 @@ class Brush extends Tool {
             point: { x, y },
             strokeColor: this.strokeColor,
             figure: Figures.Brush,
+            lineWidth: this.lineWidth,
         };
 
         Brush.draw(drawData, this.context);
@@ -58,10 +59,11 @@ class Brush extends Tool {
         drawData: BrushDrawData,
         context: CanvasRenderingContext2D
     ) {
-        const { point, strokeColor } = drawData;
+        const { point, strokeColor, lineWidth } = drawData;
         if (strokeColor) {
             context.strokeStyle = strokeColor;
         }
+        context.lineWidth = lineWidth;
         context.lineTo(point.x, point.y);
         context.stroke();
     }

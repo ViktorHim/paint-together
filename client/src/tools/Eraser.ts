@@ -24,6 +24,7 @@ class Eraser extends Brush {
             point: { x, y },
             strokeColor: this.strokeColor,
             figure: Figures.Eraser,
+            lineWidth: this.lineWidth,
         };
 
         Brush.draw(drawData, this.context);
@@ -34,8 +35,9 @@ class Eraser extends Brush {
         drawData: BrushDrawData,
         context: CanvasRenderingContext2D
     ) {
-        const { point } = drawData;
+        const { point, lineWidth } = drawData;
         context.strokeStyle = "#ffffff";
+        context.lineWidth = lineWidth;
         context.lineTo(point.x, point.y);
         context.stroke();
     }

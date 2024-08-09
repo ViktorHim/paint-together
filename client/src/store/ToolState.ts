@@ -20,7 +20,7 @@ class ToolState {
         this.tool.drawMode = this.drawMode;
         this.tool.FillColor = this.fillColor;
         this.tool.StrokeColor = this.strokeColor;
-        this.tool.lineWidth = this.lineWidth;
+        this.tool.LineWidth = this.lineWidth;
     }
 
     setDrawMode(mode: drawMode) {
@@ -51,7 +51,7 @@ class ToolState {
     setLineWidth(width: number) {
         if (this.tool) {
             this.lineWidth = width;
-            this.tool.lineWidth = width;
+            this.tool.LineWidth = width;
         }
     }
 

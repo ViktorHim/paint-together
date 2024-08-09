@@ -1,4 +1,3 @@
-import PaintSocket from "../socket/Socket";
 import { Settings } from "../types/Settings";
 
 export type drawMode = "border" | "fill" | "solid";
@@ -14,6 +13,7 @@ abstract class Tool {
     protected mode: drawMode = "border";
     protected fillColor: string = "black";
     protected strokeColor: string = "black";
+    protected lineWidth: number = 1;
 
     protected mouseUpHandler?(event: MouseEvent): void;
     protected mouseDownHandler?(event: MouseEvent): void;
@@ -60,8 +60,8 @@ abstract class Tool {
         this.strokeColor = color;
     }
 
-    public set lineWidth(width: number) {
-        this.context.lineWidth = width;
+    public set LineWidth(width: number) {
+        this.lineWidth = width;
     }
 
     public get ToolName(): string {

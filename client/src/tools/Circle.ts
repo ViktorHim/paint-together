@@ -66,6 +66,7 @@ class Circle extends Tool {
             figure: Figures.Circle,
             strokeColor: this.strokeColor,
             fillColor: this.fillColor,
+            lineWidth: this.lineWidth,
         });
     }
 
@@ -112,10 +113,12 @@ class Circle extends Tool {
             mode,
             strokeColor,
             fillColor,
+            lineWidth,
         } = drawData;
 
         context.fillStyle = fillColor;
         context.strokeStyle = strokeColor;
+        context.lineWidth = lineWidth;
 
         context.beginPath();
         context.ellipse(
@@ -127,7 +130,7 @@ class Circle extends Tool {
             angle.x,
             angle.y
         );
-        if (mode === "fill") {
+        if (mode === "fill" || mode === "solid") {
             context.fill();
         }
         context.stroke();
@@ -140,7 +143,7 @@ class Circle extends Tool {
         img.onload = () => {
             this.context.fillStyle = this.fillColor;
             this.context.strokeStyle = this.mode === "solid" ? this.fillColor : this.strokeColor;
-
+            this.context.lineWidth = this.lineWidth;
 
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.context.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);

@@ -1,4 +1,3 @@
-import PaintSocket from "../socket/Socket";
 import SocketState from "../store/SocketState";
 import { BucketDrawData, Figures } from "../types/DrawData";
 import { Settings } from "../types/Settings";

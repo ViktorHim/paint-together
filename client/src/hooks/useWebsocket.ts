@@ -18,6 +18,7 @@ export const useWebsocket = (isInit: boolean) => {
             SocketState.connect();
             ToolState.setTool(new Brush(CanvasState.canvas!));
         }
+        console.log("switch");
 
     }, [isInit]);
 

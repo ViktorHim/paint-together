@@ -4,6 +4,7 @@ import { Input } from "../../ui/Input/Input"
 import cls from "./SignInForm.module.scss";
 import SocketState from "../../store/SocketState";
 import { observer } from "mobx-react-lite";
+import { toast } from "react-toastify";
 
 export const SignInForm = observer(() => {
 
@@ -12,7 +13,11 @@ export const SignInForm = observer(() => {
     const onSubmitHandler = (event : any) => {
         event.preventDefault();
 
-        if(username) SocketState.Username = username;
+        if(username) {
+            SocketState.Username = username
+        } else {
+            toast.error("Username is required");
+        }
     }
 
     return(

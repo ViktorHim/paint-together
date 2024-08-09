@@ -23,11 +23,13 @@ type Color = string | CanvasGradient | CanvasPattern;
 export interface BrushDrawData {
   point: Point;
   strokeColor?: Color;
+  lineWidth: number;
   figure: Figures.Brush | Figures.Eraser;
 }
 
 export interface EraserDrawData {
   point: Point;
+  lineWidth: number;
   figure: Figures.Eraser;
 }
 
@@ -41,6 +43,7 @@ export interface LineDrawData {
   startPoint: Point;
   endPoint: Point;
   strokeColor: Color;
+  lineWidth: number;
   figure: Figures.Line;
 }
 
@@ -49,6 +52,7 @@ export interface RectDrawData {
   strokeColor: Color;
   fillColor: Color;
   mode: drawMode;
+  lineWidth: number;
   figure: Figures.Rect;
 }
 
@@ -60,5 +64,6 @@ export interface CircleDrawData {
   mode: drawMode;
   strokeColor: Color;
   fillColor: Color;
+  lineWidth: number;
   figure: Figures.Circle;
 }

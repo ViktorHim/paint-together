@@ -32,29 +32,33 @@ class SocketState {
         makeAutoObservable(this);
     }
 
-    get Cursors() {
+    public get Cursors() {
         return this.cursors;
     }
 
-    get Username() {
-        return this.username as string;
+    private set Cursors(cursors: { [name: string]: Point }) {
+        this.cursors = cursors;
     }
 
-    get Inited() {
+    public get Username() {
+        return this.username;
+    }
+
+    public get Inited() {
         return !!(this.username && this.id && this.canvas)
     }
 
-    set Id(id : string) {
+    public set Id(id : string | null) {
         if(this.socket) return;
         this.id = id;
     }
 
-    set Username(username: string) {
+    public set Username(username: string | null) {
         if(this.socket) return;
         this.username = username;
     }
 
-    set Canvas(canvas : HTMLCanvasElement) {
+    public set Canvas(canvas : HTMLCanvasElement) {
         if(this.socket) return;
         this.canvas = canvas;
     }
@@ -62,29 +66,15 @@ class SocketState {
     public connect() {
         this.socket = new WebSocket(WEBSOCKET_URL);
         this.initOpenEvent();
-        // this.initCloseEvent();
+        this.initCloseEvent();
         this.initMessageEvent();
     }
 
     public disconnect() {
         if(!this.socket)  return;
 
-        const message: Message = {
-            id: this.id!,
-            username: this.username!,
-            method: "disconnect",
-        };
-        this.socket.send(JSON.stringify(message));
-        
+        this.sendDisconnectNotification();
         this.socket.close();
-        this.socket.onclose = null;
-        this.socket.onopen = null;
-        this.socket.onerror = null;
-        this.socket.onmessage = null;
-        this.socket = null;
-        this.id = null;
-        this.username = null;
-        this.cursors = {};
     }
     
 
@@ -102,18 +92,23 @@ class SocketState {
         }
     }
 
-    // private initCloseEvent() {
-    //     if(!this.socket) return;
+    private initCloseEvent() {
+        if(!this.socket) return;
 
-    //     this.socket.onclose = () => {
-    //         const message: Message = {
-    //             id: this.id!,
-    //             username: this.username!,
-    //             method: "disconnect",
-    //         };
-    //         this.socket!.send(JSON.stringify(message));
-    //     }
-    // }
+        this.socket.onclose = () => {
+            toast.error(`You has disconnected`);
+            if(this.socket) { 
+                this.socket.onclose = null;
+                this.socket.onopen = null;
+                this.socket.onerror = null;
+                this.socket.onmessage = null;
+                this.socket = null;
+            }
+            this.Id = null;
+            this.Username = null;
+            this.Cursors = {};
+        }
+    }
 
     private initMessageEvent() {
         if(!this.socket) return;
@@ -134,6 +129,7 @@ class SocketState {
             case "disconnect":
                 {
                     toast.error(`user ${message.username} has disconnected`);
+                    if(this.cursors[message.username]) delete this.cursors[message.username];
                 }
                 break;
             case "draw":
@@ -269,6 +265,17 @@ class SocketState {
             method: "finish",
         };
         this.socket.send(JSON.stringify(message));
+    }
+
+    public sendDisconnectNotification() {
+        if(!this.socket) return;
+
+        const disconnectMessage: Message = {
+            id: this.id!,
+            username: this.username!,
+            method: "disconnect",
+        };
+        this.socket.send(JSON.stringify(disconnectMessage));
     }
 }
 

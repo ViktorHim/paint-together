@@ -15,8 +15,8 @@ export const Canvas = observer(() => {
             CanvasState.setCanvas(canvasRef.current as HTMLCanvasElement);
             SocketState.Canvas = canvasRef.current as HTMLCanvasElement;
         }
-        if(id) SocketState.Id = id;
-    }, [id]);
+        if(id && !SocketState.Id) SocketState.Id = id;
+    }, [id, SocketState.Inited]);
 
     const onMouseDownHandler = () => {
         CanvasState.pushToUndo(canvasRef.current!.toDataURL());

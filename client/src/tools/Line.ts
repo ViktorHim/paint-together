@@ -41,6 +41,7 @@ class Line extends Tool {
             endPoint: { x: this.endX, y: this.endY },
             figure: Figures.Line,
             strokeColor: this.strokeColor,
+            lineWidth: this.lineWidth,
         });
     }
 
@@ -64,9 +65,11 @@ class Line extends Tool {
         drawData: LineDrawData,
         context: CanvasRenderingContext2D
     ) {
-        const { startPoint, endPoint, strokeColor } = drawData;
+        const { startPoint, endPoint, strokeColor, lineWidth } = drawData;
 
         context.strokeStyle = strokeColor;
+        context.lineWidth = lineWidth;
+
         context.beginPath();
         context.moveTo(startPoint.x, startPoint.y);
         context.lineTo(endPoint.x, endPoint.y);
@@ -79,6 +82,8 @@ class Line extends Tool {
         img.src = this.saved;
         img.onload = () => {
             this.context.strokeStyle = this.strokeColor;
+            this.context.lineWidth = this.lineWidth;
+
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.context.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
             this.context.beginPath();
