@@ -9,8 +9,11 @@ app.ws('/', (ws, req) => {
     ws.on("message", (msg) => {
         msg = JSON.parse(msg);
         switch(msg.method) {
-            case "connection":
+            case "connect":
                 onConnectionHandler(ws, msg);
+                break;
+            case "disconnect":
+                brodcastConnection(ws, msg);
                 break;
             case "draw":
                 brodcastConnection(ws, msg);

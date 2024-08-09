@@ -4,8 +4,6 @@ import { useCallback, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import CanvasState from "../../store/CanvasState";
 import SocketState from "../../store/SocketState";
-import ToolState from "../../store/ToolState";
-import Brush from "../../tools/Brush";
 import { throttle } from "../../helpers/throttle";
 
 export const Canvas = observer(() => {
@@ -13,21 +11,12 @@ export const Canvas = observer(() => {
     const { id } = useParams();
 
     useEffect(() => {
-        CanvasState.setCanvas(canvasRef.current as HTMLCanvasElement);
-    }, []);
-
-    useEffect(() => {
-        if (SocketState.username) {
-            const socket = new WebSocket("ws://localhost:5000/");
-            SocketState.setId(id!);
-            SocketState.setCanvas(CanvasState.canvas!);
-            SocketState.initSocket(socket);
-
-            ToolState.setTool(
-                new Brush(CanvasState.canvas as HTMLCanvasElement, SocketState.socket!)
-            );
+        if(!SocketState.Canvas) {
+            CanvasState.setCanvas(canvasRef.current as HTMLCanvasElement);
+            SocketState.Canvas = canvasRef.current as HTMLCanvasElement;
         }
-    }, [SocketState.username]);
+        if(id) SocketState.Id = id;
+    }, [id]);
 
     const onMouseDownHandler = () => {
         CanvasState.pushToUndo(canvasRef.current!.toDataURL());
@@ -35,7 +24,7 @@ export const Canvas = observer(() => {
 
     const sendCursor = useCallback(
         throttle(
-            (x: number, y: number) => SocketState.socket?.sendCursor({ x, y }),
+            (x: number, y: number) => SocketState.sendCursor({ x, y }),
             100
         ),
         []

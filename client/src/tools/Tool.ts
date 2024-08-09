@@ -7,7 +7,6 @@ abstract class Tool {
     protected toolName: string;
 
     protected readonly canvas: HTMLCanvasElement;
-    protected readonly socket: PaintSocket;
     protected readonly context: CanvasRenderingContext2D;
 
     protected isMouseDown: boolean;
@@ -22,8 +21,7 @@ abstract class Tool {
 
     abstract hasDrawProperty(setting : Settings): boolean;
 
-    constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
-        this.socket = socket;
+    constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
         this.isMouseDown = false;

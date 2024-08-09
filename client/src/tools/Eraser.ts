@@ -1,11 +1,11 @@
-import PaintSocket from "../socket/Socket";
+import SocketState from "../store/SocketState";
 import { BrushDrawData, Figures } from "../types/DrawData";
 import { Settings } from "../types/Settings";
 import Brush from "./Brush";
 
 class Eraser extends Brush {
-    constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
-        super(canvas, socket);
+    constructor(canvas: HTMLCanvasElement) {
+        super(canvas);
         this.toolName = "Eraser";
     }
 
@@ -27,7 +27,7 @@ class Eraser extends Brush {
         };
 
         Brush.draw(drawData, this.context);
-        this.socket.sendDrawData(drawData);
+        SocketState.sendDraw(drawData);
     }
 
     public static override draw(

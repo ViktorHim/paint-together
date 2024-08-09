@@ -12,7 +12,7 @@ export const SignInForm = observer(() => {
     const onSubmitHandler = (event : any) => {
         event.preventDefault();
 
-        if(username) SocketState.setUsername(username);
+        if(username) SocketState.Username = username;
     }
 
     return(

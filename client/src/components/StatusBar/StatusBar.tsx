@@ -1,25 +1,35 @@
 import { observer } from "mobx-react-lite";
 import cls from "./status_bar.module.scss";
-import CanvasState from "../../store/CanvasState";
 import SocketState from "../../store/SocketState";
 import { Button } from "../../ui/Button/Button";
+import { toast } from "react-toastify";
 
 export const StatusBar = observer(() => {
-    const position = CanvasState.cursorPosition;
 
-    const onConnectionHandler = () => {
-        SocketState.setUsername(`viktor${Math.floor(Math.random() * 10000)}`);
-    };
+    const shareLinkHandler = () => {
+        const currentURL = window.location.href;
+
+        navigator.clipboard.writeText(currentURL)
+            .then(() => toast.success("Link was copied!"));
+    }
+
+    const clearHandler = () => {
+        SocketState.sendClear();
+    }
+
+    const logoutHandler = () => {
+        SocketState.disconnect();
+    }
 
     return (
         <div className={cls.status_bar}>
-            <Button>
-                Sign out
+            <Button onClick={logoutHandler}>
+                Logout
             </Button>
-            <Button>
+            <Button onClick={shareLinkHandler}>
                 Share link
             </Button>
-            <Button onClick={() => SocketState.socket?.sendClear()}>
+            <Button onClick={clearHandler}>
                 Clear canvas
             </Button>
 

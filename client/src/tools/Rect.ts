@@ -1,4 +1,4 @@
-import PaintSocket from "../socket/Socket";
+import SocketState from "../store/SocketState";
 import { Figures, RectDrawData } from "../types/DrawData";
 import { Settings } from "../types/Settings";
 import Tool from "./Tool";
@@ -12,8 +12,8 @@ class Rect extends Tool {
 
     isShiftPressed: boolean = false;
 
-    constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
-        super(canvas, socket);
+    constructor(canvas: HTMLCanvasElement) {
+        super(canvas);
         this.listenEvents();
         this.toolName = "Rectangle";
     }
@@ -55,7 +55,7 @@ class Rect extends Tool {
     protected mouseUpHandler(event: MouseEvent) {
         this.isMouseDown = false;
 
-        this.socket.sendDrawData({
+        SocketState.sendDraw({
             rect: { x: this.startX, y: this.startY, w: this.width, h: this.height },
             mode: this.mode,
             figure: Figures.Rect,
@@ -63,7 +63,7 @@ class Rect extends Tool {
             strokeColor: this.strokeColor,
         });
 
-        this.socket.sendFinish();
+        SocketState.sendFinish();
     }
 
     protected mouseDownHandler(event: MouseEvent) {

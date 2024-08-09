@@ -13,8 +13,14 @@ import { Modal } from "./components/Modal/Modal";
 import { SignInForm } from "./components/SignInForm/SignInForm";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { observer } from "mobx-react-lite";
+import { useWebsocket } from "./hooks/useWebsocket";
+import SocketState from "./store/SocketState";
 
-export const App = () => {
+export const App = observer(() => {
+
+    useWebsocket(SocketState.Inited);
+
     return (
         <div className="app">
             <AppRouter>
@@ -42,4 +48,4 @@ export const App = () => {
             />
         </div>
     );
-};
+});

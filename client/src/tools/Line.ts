@@ -1,4 +1,4 @@
-import PaintSocket from "../socket/Socket";
+import SocketState from "../store/SocketState";
 import { Figures, LineDrawData } from "../types/DrawData";
 import { Settings } from "../types/Settings";
 import Tool from "./Tool";
@@ -10,8 +10,8 @@ class Line extends Tool {
     endY: number = 0;
     saved: string = "";
 
-    constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
-        super(canvas, socket);
+    constructor(canvas: HTMLCanvasElement) {
+        super(canvas);
         this.listenEvents();
         this.toolName = "Line";
     }
@@ -36,7 +36,7 @@ class Line extends Tool {
     protected mouseUpHandler(event: MouseEvent) {
         this.isMouseDown = false;
 
-        this.socket.sendDrawData({
+        SocketState.sendDraw({
             startPoint: { x: this.startX, y: this.startY },
             endPoint: { x: this.endX, y: this.endY },
             figure: Figures.Line,

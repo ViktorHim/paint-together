@@ -1,4 +1,5 @@
 import PaintSocket from "../socket/Socket";
+import SocketState from "../store/SocketState";
 import { BucketDrawData, Figures } from "../types/DrawData";
 import { Settings } from "../types/Settings";
 import Tool from "./Tool";
@@ -11,8 +12,8 @@ type ColorRGBA = {
 };
 
 class Bucket extends Tool {
-    constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
-        super(canvas, socket);
+    constructor(canvas: HTMLCanvasElement) {
+        super(canvas);
         this.listenEvents();
         this.toolName = "Bucket";
     }
@@ -47,7 +48,7 @@ class Bucket extends Tool {
         };
 
         Bucket.draw(drawData, this.canvas);
-        this.socket.sendDrawData(drawData);
+        SocketState.sendDraw(drawData);
     }
 
     private static getPixelColor(

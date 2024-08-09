@@ -1,4 +1,4 @@
-import PaintSocket from "../socket/Socket";
+import SocketState from "../store/SocketState";
 import { CircleDrawData, Figures } from "../types/DrawData";
 import { Settings } from "../types/Settings";
 import Tool from "./Tool";
@@ -16,8 +16,8 @@ class Circle extends Tool {
 
     isShiftPressed: boolean = false;
 
-    constructor(canvas: HTMLCanvasElement, socket: PaintSocket) {
-        super(canvas, socket);
+    constructor(canvas: HTMLCanvasElement) {
+        super(canvas);
         this.listenEvents();
         this.toolName = "Circle";
     }
@@ -59,7 +59,7 @@ class Circle extends Tool {
     protected mouseUpHandler(event: MouseEvent) {
         this.isMouseDown = false;
 
-        this.socket.sendDrawData({
+        SocketState.sendDraw({
             center: { x: this.centerX, y: this.centerY },
             radius: { x: this.radiusX, y: this.radiusY },
             mode: this.mode,
